@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: catechdojo
+      MYSQL_USER: catechdojo
+      MYSQL_PASSWORD: catechdojo
+    ports:
+    - 3306:3306
+  web:
+    build: .
+    command: bash -c "go run main.go"
+    tty: true
+    volumes:
+    - .:/go/src/web
+    ports:
+    - "8080:8080"
+    depends_on:
+      - db
