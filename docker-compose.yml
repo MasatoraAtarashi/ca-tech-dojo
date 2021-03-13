@@ -7,6 +7,8 @@ services:
       MYSQL_DATABASE: catechdojo
       MYSQL_USER: catechdojo
       MYSQL_PASSWORD: catechdojo
+    volumes:
+    - ./init_db.d:/docker-entrypoint-initdb.d
     ports:
     - 3306:3306
   web:
