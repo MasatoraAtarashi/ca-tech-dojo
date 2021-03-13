@@ -6,7 +6,7 @@ https://techbowl.co.jp/techtrain/missions/12
 - [x] API仕様の確認
 
 ### 2
-- [ ] 開発環境構築
+- [x] 開発環境構築
 
 ### 3
 - [ ] テーブル設計
@@ -17,6 +17,7 @@ https://techbowl.co.jp/techtrain/missions/12
   - [ ] ・/user/create ユーザアカウント認証情報作成API
   - [ ] ・/user/get ユーザ情報取得API
   - [ ] ・/user/update ユーザ情報更新API
+- [ ] Herokuにデプロイ
 
 ### 5
 - [ ] ガチャテーブル設計
