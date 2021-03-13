@@ -14,8 +14,11 @@ https://techbowl.co.jp/techtrain/missions/12
 
 ### 4
 - [ ] API実装
-  - [ ] ・/user/create ユーザアカウント認証情報作成API
-  - [ ] ・/user/get ユーザ情報取得API
+  - [x] ・/user/create ユーザアカウント認証情報作成API
+    - [x] レスポンス
+    - [x] user保存
+    - [x] データ永続化
+  - [ ] ・user/get ユーザ情報取得API
   - [ ] ・/user/update ユーザ情報更新API
 - [ ] Herokuにデプロイ
 
