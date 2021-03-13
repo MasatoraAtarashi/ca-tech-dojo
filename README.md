@@ -9,8 +9,8 @@ https://techbowl.co.jp/techtrain/missions/12
 - [x] 開発環境構築
 
 ### 3
-- [ ] テーブル設計
-- [ ] CREATE TABLE
+- [x] テーブル設計(Userテーブル)
+- [x] CREATE TABLE
 
 ### 4
 - [ ] API実装
