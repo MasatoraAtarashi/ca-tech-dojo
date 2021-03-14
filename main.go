@@ -13,6 +13,7 @@ import (
 )
 
 type User struct {
+  Id int32
   Name string
   Token string
 }
@@ -25,12 +26,17 @@ type UserCreateResponse struct {
   Token string `json:"token"`
 }
 
+type UserGetResponse struct {
+  Name string `json:"name"`
+}
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
   len := r.ContentLength
   body := make([]byte, len)
   var userCreateRequest UserCreateRequest
   r.Body.Read(body)
   json2.Unmarshal(body, &userCreateRequest)
+  //TODO: nameが指定されていなかったら400を返す
   name := userCreateRequest.Name
 
   token, err := createToken(name)
@@ -47,28 +53,32 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
   }
 
   userCreateResponse := UserCreateResponse{
-   Token: token,
+    Token: token,
   }
   output, err := json2.Marshal(&userCreateResponse)
   w.Header().Set("Content-Type", "application/json")
   w.Write(output)
 }
 
-//func GetUser(w http.ResponseWriter, r *http.Request) {
-//  //verifyKey, err := jwt.par
-//  //TODO: メソッド切り出す
-//  tokenString := r.Header.Get("x-token")
-//  name := parseToken(tokenString)
-//  if err != nil {
-//    //TODO: 403を返す
-//    return
-//  }
-//  //TODO: DB参照
-//  //token, _ = jwt.Parse(myToken, func(token *jwt.Token) ([]byte, error) {
-//  //  return myLookupKey(token.Header["kid"])
-//  //})
-//  fmt.Println(name)
-//}
+func GetUser(w http.ResponseWriter, r *http.Request) {
+  //TODO: x-tokenが指定されていなかったら400
+  token := r.Header.Get("x-token")
+  user, err := retrieve(token)
+  if err != nil {
+    http.Error(w, "不正なトークンです", http.StatusForbidden)
+    return
+  }
+  userGetResponse := UserGetResponse{
+    Name: user.Name,
+  }
+  output, err := json2.Marshal(&userGetResponse)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(output)
+}
 
 func createToken(name string) (tokenString string, err error) {
   rand.Seed(time.Now().UnixNano())
@@ -81,25 +91,10 @@ func createToken(name string) (tokenString string, err error) {
   return
 }
 
-//func parseToken(tokenString string) (name string, err error) {
-//  token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-//    return []byte("mySigningKey"), nil
-//  })
-//  if err != nil {
-//    return
-//  }
-//  if token.Valid {
-//    name = "a"
-//    return
-//  } else {
-//    return
-//  }
-//}
-
 func main() {
   r := mux.NewRouter()
   u := r.Path("/user").Subrouter()
   u.Methods("POST").HandlerFunc(CreateUser)
-  //u.Methods("GET").HandlerFunc(GetUser)
+  u.Methods("GET").HandlerFunc(GetUser)
   log.Fatal(http.ListenAndServe(":8080", r))
 }

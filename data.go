@@ -21,3 +21,10 @@ func (user *User) create() (err error) {
   _, err = Db.Exec("insert into users (name, token) values (?, ?)", user.Name, user.Token)
   return
 }
+
+// Read a user
+func retrieve(token string) (user User, err error) {
+  user = User{}
+  err = Db.QueryRow("select id, token, name from users where token = ?", token).Scan(&user.Id, &user.Token, &user.Name)
+  return
+}
