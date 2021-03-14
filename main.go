@@ -41,7 +41,6 @@ type UserCharacter struct {
   ID int32
   userID int32
   characterID     int32
-  name            string
 }
 
 type UserCreateRequest struct {
@@ -71,6 +70,16 @@ type GachaDrawRequest struct {
 type GachaResult struct {
   CharacterID int32 `json:"characterID"`
   Name string `json:"name"`
+}
+
+type CharacterListResponse struct {
+  Characters []UserCharacterListResponse `json:"characters"`
+}
+
+type UserCharacterListResponse struct {
+  ID int32 `json:"userCharacterID"`
+  CharacterID     int32 `json:"characterID"`
+  Name            string `json:"name"`
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -194,6 +203,30 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
   w.Write(output)
 }
 
+func ListCharacters(w http.ResponseWriter, r *http.Request) {
+  user, err := authenticate(r)
+  if err != nil {
+    http.Error(w, err.Error(), error_map[err.Error()])
+    return
+  }
+
+  userCharacterListResponses, err := user.getAllCharacters()
+  if err != nil {
+    return
+  }
+
+  characterListResponse := CharacterListResponse{
+    Characters: userCharacterListResponses,
+  }
+  output, err := json2.Marshal(&characterListResponse)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(output)
+}
+
 func authenticate(r *http.Request) (user User, err error) {
   token := r.Header.Get("x-token")
   if token == "" {
@@ -265,5 +298,6 @@ func main() {
   u.Methods("GET").HandlerFunc(GetUser)
   u.Methods("PUT").HandlerFunc(UpdateUser)
   r.Path("/gacha/draw").Methods("POST").HandlerFunc(DrawGacha)
+  r.Path("/character/list").Methods("GET").HandlerFunc(ListCharacters)
   log.Fatal(http.ListenAndServe(":8080", r))
 }

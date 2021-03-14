@@ -23,9 +23,9 @@ https://techbowl.co.jp/techtrain/missions/12
 - [x] ガチャテーブル設計
 
 ### 6
-- [ ] API実装
+- [x] API実装
   - [x] ・/gacha/draw ガチャ実行API
-  - [ ] ・/character/list ユーザ所持キャラクター一覧取得API
+  - [x] ・/character/list ユーザ所持キャラクター一覧取得API
 - [ ] リファクタリング
   - [ ] エラーメッセージ
 ### optional

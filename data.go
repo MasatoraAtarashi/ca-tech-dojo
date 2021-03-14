@@ -35,6 +35,25 @@ func (user *User) update() (err error) {
   return
 }
 
+func (user *User) getAllCharacters() (userCharacterListResponses []UserCharacterListResponse, err error) {
+  rows, err := Db.Query("select id, character_id from user_characters where user_id = ?", user.ID)
+  for rows.Next() {
+    userCharacterListResponse := UserCharacterListResponse{}
+    err = rows.Scan(&userCharacterListResponse.ID, &userCharacterListResponse.CharacterID)
+    if err != nil {
+      return
+    }
+    var character Character
+    character, err = retrive_character(userCharacterListResponse.CharacterID)
+    if err != nil {
+      return
+    }
+    userCharacterListResponse.Name = character.name
+    userCharacterListResponses = append(userCharacterListResponses, userCharacterListResponse)
+  }
+  return
+}
+
 // UserCharacter
 // Create a new user_character
 func (uc *UserCharacter) create() (err error) {
@@ -54,5 +73,11 @@ func getAllCharacters() (characters []Character, err error) {
     }
     characters = append(characters, character)
   }
+  return
+}
+
+// Get a Character
+func retrive_character(cid int32) (character Character, err error) {
+  err = Db.QueryRow("select name from characters where id = ?", cid).Scan(&character.name)
   return
 }
