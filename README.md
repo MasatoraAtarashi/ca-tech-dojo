@@ -24,9 +24,10 @@ https://techbowl.co.jp/techtrain/missions/12
 
 ### 6
 - [ ] API実装
-  - [ ] ・/gacha/draw ガチャ実行API
+  - [x] ・/gacha/draw ガチャ実行API
   - [ ] ・/character/list ユーザ所持キャラクター一覧取得API
-
+- [ ] リファクタリング
+  - [ ] エラーメッセージ
 ### optional
 - [ ] Herokuにデプロイ
 - [ ] (ゲーム機能でありそうな機能を考えて追加設計・実装をしてみましょう。)

@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: catechdojo
     volumes:
     - ./db/mysql_data:/var/lib/mysql
+    - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
     - ./db/mysql_init:/docker-entrypoint-initdb.d
     ports:
     - 3306:3306
