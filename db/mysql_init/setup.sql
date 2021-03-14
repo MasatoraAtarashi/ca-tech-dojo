@@ -19,3 +19,7 @@ create table user_characters (
                                  user_id integer  references users(id),
                                  character_id integer  references characters(id)
 );
+
+insert into characters values (1, 'Satan', 10);
+insert into characters values (2, 'Bahamut', 20);
+insert into characters values (3, 'Goblin', 70);
