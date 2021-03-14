@@ -28,3 +28,9 @@ func retrieve(token string) (user User, err error) {
   err = Db.QueryRow("select id, token, name from users where token = ?", token).Scan(&user.Id, &user.Token, &user.Name)
   return
 }
+
+// Update a user
+func (user *User) update() (err error) {
+  _, err = Db.Exec("update users set name = ?", user.Name)
+  return
+}
