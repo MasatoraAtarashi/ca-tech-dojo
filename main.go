@@ -39,8 +39,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
   var userCreateRequest UserCreateRequest
   r.Body.Read(body)
   json2.Unmarshal(body, &userCreateRequest)
-  //TODO: nameが指定されていなかったら400を返す
   name := userCreateRequest.Name
+  if name == "" {
+    http.Error(w, "名前を指定してください", http.StatusBadRequest)
+    return
+  }
 
   token, err := createToken(name)
   if err != nil {
@@ -64,8 +67,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-  //TODO: x-tokenが指定されていなかったら400
   token := r.Header.Get("x-token")
+  if token == "" {
+    http.Error(w, "トークンを指定してください", http.StatusBadRequest)
+    return
+  }
+
   user, err := retrieve(token)
   if err != nil {
     http.Error(w, "不正なトークンです", http.StatusForbidden)
@@ -84,8 +91,12 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-  //TODO: x-tokenが指定されていなかったら400
   token := r.Header.Get("x-token")
+  if token == "" {
+    http.Error(w, "トークンを指定してください", http.StatusBadRequest)
+    return
+  }
+
   user, err := retrieve(token)
   if err != nil {
     http.Error(w, "不正なトークンです", http.StatusForbidden)
@@ -97,8 +108,11 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
   var userUpdateRequest UserUpdateRequest
   r.Body.Read(body)
   json2.Unmarshal(body, &userUpdateRequest)
-  //TODO: nameが指定されていなかったら400を返す
   name := userUpdateRequest.Name
+  if name == "" {
+    http.Error(w, "名前を指定してください", http.StatusBadRequest)
+    return
+  }
 
   user.Name = name
   err = user.update()

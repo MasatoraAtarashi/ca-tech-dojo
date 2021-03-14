@@ -13,15 +13,11 @@ https://techbowl.co.jp/techtrain/missions/12
 - [x] CREATE TABLE
 
 ### 4
-- [ ] API実装
+- [x] API実装
   - [x] ・/user/create ユーザアカウント認証情報作成API
   - [x] ・user/get ユーザ情報取得API
   - [x] ・/user/update ユーザ情報更新API
-- [ ] 適切なエラーを返す
-  - [ ] ・/user/create ユーザアカウント認証情報作成API
-  - [ ] ・user/get ユーザ情報取得API
-  - [ ] ・/user/update ユーザ情報更新API
-- [ ] Herokuにデプロイ
+- [x] 適切なエラーを返す
 
 ### 5
 - [ ] ガチャテーブル設計
@@ -30,3 +26,8 @@ https://techbowl.co.jp/techtrain/missions/12
 - [ ] API実装
   - [ ] ・/gacha/draw ガチャ実行API
   - [ ] ・/character/list ユーザ所持キャラクター一覧取得API
+
+### optional
+- [ ] Herokuにデプロイ
+- [ ] (ゲーム機能でありそうな機能を考えて追加設計・実装をしてみましょう。)
+- [ ] 様々なWebフレームワークやライブラリなどを導入してみよう
