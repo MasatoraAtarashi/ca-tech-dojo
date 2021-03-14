@@ -20,7 +20,7 @@ https://techbowl.co.jp/techtrain/missions/12
 - [x] 適切なエラーを返す
 
 ### 5
-- [ ] ガチャテーブル設計
+- [x] ガチャテーブル設計
 
 ### 6
 - [ ] API実装
