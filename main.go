@@ -2,6 +2,7 @@ package main
 
 import (
   json2 "encoding/json"
+  "fmt"
   "log"
   "math/rand"
   "net/http"
@@ -10,6 +11,19 @@ import (
   "github.com/dgrijalva/jwt-go"
   "github.com/gorilla/mux"
 )
+
+var error_map = map[string]int{
+  "トークンを指定してください": http.StatusBadRequest,
+  "不正なトークンです": http.StatusForbidden,
+}
+
+type MyError struct {
+  msg string
+}
+
+func (e *MyError) Error() string {
+  return fmt.Sprintf("%s", e.msg)
+}
 
 type User struct {
   Id int32
@@ -31,6 +45,9 @@ type UserGetResponse struct {
 
 type UserUpdateRequest struct {
   Name string `json:"name"`
+}
+
+
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -67,17 +84,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-  token := r.Header.Get("x-token")
-  if token == "" {
-    http.Error(w, "トークンを指定してください", http.StatusBadRequest)
+  user, err := authenticate(r)
+  if err != nil {
+    http.Error(w, err.Error(), error_map[err.Error()])
     return
   }
 
-  user, err := retrieve(token)
-  if err != nil {
-    http.Error(w, "不正なトークンです", http.StatusForbidden)
-    return
-  }
   userGetResponse := UserGetResponse{
     Name: user.Name,
   }
@@ -91,15 +103,9 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-  token := r.Header.Get("x-token")
-  if token == "" {
-    http.Error(w, "トークンを指定してください", http.StatusBadRequest)
-    return
-  }
-
-  user, err := retrieve(token)
+  user, err := authenticate(r)
   if err != nil {
-    http.Error(w, "不正なトークンです", http.StatusForbidden)
+    http.Error(w, err.Error(), error_map[err.Error()])
     return
   }
 
@@ -120,6 +126,22 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
+  return
+}
+
+func authenticate(r *http.Request) (user User, err error) {
+  token := r.Header.Get("x-token")
+  if token == "" {
+    err = &MyError{msg: "トークンを指定してください"}
+    return
+  }
+
+  user, err = retrieve(token)
+  if err != nil {
+    err = &MyError{msg: "不正なトークンです"}
+    return
+  }
+
   return
 }
 
